@@ -5,7 +5,7 @@
     <div class="container">
       <div class="row align-items-center justify-content-center">
         <div class="col-md-8">
-          <TextMessageInput :languageSelected="languageSelected" />
+          <TextMessageInput :languageSelected="languageSelected" :languageValue="languageValue" />
         </div>
       </div>
     </div>
@@ -25,12 +25,14 @@ export default {
   },
   data() {
     return {
-      languageSelected: false
+      languageSelected: false,
+      languageValue: ""
     };
   },
   methods: {
-    setLanguage() {
+    setLanguage(selectedLanguage) {
       this.languageSelected = true;
+      this.languageValue = selectedLanguage
     }
   }
 };

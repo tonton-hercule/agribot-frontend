@@ -1,9 +1,9 @@
 <template>
-    <div class="messages py-3">
+    <div class="messages" style="max-height: 300px; overflow-y: auto;">
         <div v-for="(msg, index) in chatMessages" :key="index"
             :class="['message', msg.isUser ? 'user-message' : 'bot-message']">
-            <div v-if="msg.type === 'text'" class="message-content">
-                {{ msg.content }}
+            <h5>{{ msg.isUser ? "Moi" : "ChatBot" }}</h5>
+            <div v-if="msg.type === 'text'" class="message-content" v-html="msg.content">
             </div>
             <div v-if="msg.type === 'audio'" class="audio-content">
                 <audio :src="msg.content" controls></audio>
@@ -51,6 +51,10 @@ export default {
         languageSelected: {
             type: Boolean,
             required: true
+        },
+
+        languageValue: {
+            type: String
         }
     },
     data() {
@@ -76,14 +80,22 @@ export default {
                 this.chatMessages.push({ type: 'text', content: this.message, isUser: true });
 
                 try {
-                    const response = await ChatService.store({ message: this.message });
-                    this.chatMessages.push({ type: 'text', content: response.data.reply, isUser: false });
+                    const formData = new FormData();
+                    formData.append('question', this.message);
+                    formData.append('lang', this.languageValue);
+
+                    const response = await ChatService.store(formData);
+
+                    // Remplacer les ** par des balises <strong> pour mettre en gras
+                    //let text = response.data.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+
+                    this.chatMessages.push({ type: 'text', content: response.data.answer, isUser: false });
                 } catch (error) {
                     console.error('Failed to send message:', error);
                     this.chatMessages.push({ type: 'text', content: 'Failed to get a response from the server.', isUser: false });
                 }
 
-                this.$emit('send-message', this.message);
+                //this.$emit('send-message', this.message);
                 this.message = ''; // Réinitialiser le champ de saisie après l'envoi
             }
         },
@@ -145,17 +157,16 @@ export default {
 
         async sendAudio() {
             const formData = new FormData();
-            formData.append('audio', this.audioBlob, 'audio.wav');
+            formData.append('file', this.audioBlob, 'audio.wav');
+            formData.append('lang', this.languageValue);
+            formData.append('question', "");
+            console.log(this.audioBlob)
 
             try {
-                const response = await ChatService.store(formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                });
+                const response = await ChatService.store(formData);
 
                 this.chatMessages.push({ type: 'audio', content: this.audioUrl, isUser: true });
-                this.chatMessages.push({ type: 'text', content: response.data.reply, isUser: false });
+                this.chatMessages.push({ type: 'text', content: response.data, isUser: false });
             } catch (error) {
                 console.error('Failed to send audio:', error);
                 this.chatMessages.push({ type: 'text', content: 'Failed to get a response from the server.', isUser: false });
@@ -174,6 +185,21 @@ export default {
 </script>
 
 <style scoped>
+* {
+    box-sizing: border-box;
+}
+
+.message {
+    background: #e7e7e7;
+    border-radius: 10px;
+    padding: 1rem;
+    width: fit-content;
+}
+
+.user-message {
+    background: #b6c0ca;
+}
+
 .text-message-input {
     display: flex;
     flex-direction: column;
@@ -269,5 +295,23 @@ button.reset-btn {
 button.reset-btn:hover {
     background-color: #c82333;
     box-shadow: 0 6px 12px rgba(220, 53, 69, 0.3);
+}
+
+.messages {
+    flex-grow: 1;
+    overflow: auto;
+    padding: 1rem;
+}
+
+.message+.message {
+    margin-top: 1rem;
+}
+
+.message.right {
+    margin-left: auto;
+}
+
+.audio-content{
+    min-width: 200px;
 }
 </style>

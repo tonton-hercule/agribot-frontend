@@ -29,8 +29,8 @@
         selectedLanguage: null,
         languages: [
           { code: 'fr', name: 'Français' },
-          { code: 'goun', name: 'Goun' },
-          { code: 'yoruba', name: 'Yoruba' },
+          { code: 'en', name: 'Englais' },
+          { code: 'yo', name: 'Yoruba' },
           { code: 'fon', name: 'Fon' },
         ]
       };
