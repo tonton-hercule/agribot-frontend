@@ -1,6 +1,6 @@
 <!-- src/pages/ChatPage.vue -->
 <template>
-  <div class="chat-page d-flex flex-column align-items-center justify-content-center">
+  <div class="chat-page d-flex flex-column align-items-center justify-content-center" :style="{ backgroundImage: 'url(/7795297.jpg)', backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundAttachment: 'fixed' }">
     <LanguageSelector @language-selected="setLanguage" />
     <div class="container">
       <div class="row align-items-center justify-content-center">

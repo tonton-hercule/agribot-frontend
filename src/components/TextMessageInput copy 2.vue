@@ -15,18 +15,28 @@
             :disabled="!languageSelected || isRecording" v-if="!isRecording && !audioBlob"></textarea>
 
         <div class="action-buttons" v-if="!audioBlob">
-            <button class="btn btn-danger send-btnx" @click="sendMessage"
+            <button class="btn btn-secondary voice-btn" @click="toggleRecording" :disabled="!languageSelected">
+                <span v-if="!isRecording">
+                    🎤 Start Recording
+                </span>
+                <span v-else-if="isPaused">▶️ Continuer</span>
+                <span v-else>⏸️ Pause</span>
+            </button>
+            <button v-if="isRecording" class="btn btn-danger" style="float: left;" @click="stopRecording">🛑
+                Stop</button>
+
+            <button class="btn btn-primary send-btn" @click="sendMessage"
                 :disabled="(!message && !isRecording) || !languageSelected">
-                Envoyer
+                Send
             </button>
         </div>
         <div v-if="audioBlob" class="audio-preview">
             <audio :src="audioUrl" controls></audio>
-            <button class="btn btn-danger send-btn me-2 mb-2" @click="sendAudio">
+            <button class="btn btn-primary send-btn me-2 mb-2" @click="sendAudio">
                 Send
             </button>
             <button class="btn btn-danger reset-btn" @click="resetRecording">
-                Envoyer
+                Reset
             </button>
         </div>
     </div>

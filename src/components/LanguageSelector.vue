@@ -1,12 +1,12 @@
 <!-- src/components/LanguageSelector.vue -->
 <template>
     <div class="language-selector text-center">
-      <h5>Langues disponibles:</h5>
+      <h3>Langues disponibles:</h3>
       <div class="btn-group" role="group">
         <label
           v-for="(language, index) in languages"
           :key="index"
-          class="btn btn-outline-success"
+          class="btn btn-outline-secondary btn-lg border border-primary"
         >
           <input
             type="radio"
@@ -31,7 +31,7 @@
           { code: 'fr', name: 'Français' },
           { code: 'en', name: 'Englais' },
           { code: 'yo', name: 'Yoruba' },
-          { code: 'fon', name: 'Fon' },
+          //{ code: 'fon', name: 'Fon' },
         ]
       };
     },
